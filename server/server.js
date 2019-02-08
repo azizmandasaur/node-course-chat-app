@@ -16,10 +16,20 @@ const io = socketIO(server);
 io.on('connection', (socket) => {
     console.log('New User Connected.');
 
+    socket.emit('newMessage', {
+        to: 'Aziz',
+        text: 'Good Morning',
+        timestamp: 3535124
+    });
+
+    socket.on('createMessage', (message) => {
+        console.log('createMessage', message);
+    });
+
     socket.on('disconnect', () => {
         console.log('User Disconnected.');
     });
-})
+});
 
 server.listen(port, () => {
     console.log(`Server is up on port ${port}.`);
