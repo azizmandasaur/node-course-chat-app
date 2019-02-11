@@ -5,23 +5,29 @@ socket.on('connect', function () {
 });
 
 socket.on('newMessage', function (message) {
-    console.log('newMessage', message);
-    
-    var li = $('<li></li>');
-    li.text(`${message.from}: ${message.text}`);
+    var formattedTime = moment(message.createdAt).format("LT");
 
-    $("#messages").append(li);
+    var template = $("#message-template").html();
+    var html = Mustache.render(template, {
+        from: message.from,
+        text: message.text,
+        createdAt: formattedTime
+    });
+    
+    $("#messages").append(html);
 });
 
 socket.on('newLocationMessage', function(message) {
-    var li = $('<li></li>');
-    var a = $('<a target="_blank">My Current Location</a>')
-    a.attr('href', message.url);
+    var formattedTime = moment(message.createdAt).format("LT");
 
-    li.text(`${message.from}: `);
-    li.append(a);
+    var template = $("#location-message-template").html()
+    var html = Mustache.render(template, {
+        from: message.from,
+        url: message.url,
+        createdAt: formattedTime
+    });
 
-    $("#messages").append(li);
+    $("#messages").append(html);
 });
 
 socket.on('disconnect', function () {
